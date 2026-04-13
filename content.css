@@ -55,7 +55,12 @@ html {
 /* ─────────────────────────────────────────────────────────────
    2. PROTECT MEDIA / TRANSPARENT ELEMENTS
    Prevent black boxes over images, SVGs, icons, avatars.
+   Also keep fieldset/legend transparent so MUI outlined inputs
+   (e.g. the search bar) don't render a double solid box.
    ───────────────────────────────────────────────────────────── */
+fieldset,
+fieldset *,
+legend,
 img,
 video,
 canvas,
@@ -111,6 +116,13 @@ picture,
                [class*="left-nav"], [class*="sidebar"]
    ───────────────────────────────────────────────────────────── */
 
+/* MUI v5 ScopedCssBaseline — MUI injects background:#fff on this at runtime via
+   Emotion (class specificity beats our universal * baseline). Target it directly. */
+.MuiScopedCssBaseline-root {
+  background-color: var(--ok-bg-2) !important;
+  color: var(--ok-text) !important;
+}
+
 /* Header */
 .floating-header,
 [data-se="header"],
@@ -129,8 +141,7 @@ header[role="banner"],
 }
 
 
-/* Left sidebar / nav */
-nav,
+/* Left sidebar / nav — only target the actual sidebar, not every nav on the page */
 #side-nav-expandable,
 .left-side-bar,
 #left-side-bar,
@@ -147,6 +158,22 @@ nav.o-side-nav,
   border-right: 1px solid var(--ok-border) !important;
 }
 
+
+/* Sidenav collapsible/scrollable region and all structural wrapper divs inside —
+   must match sidebar bg, not the default --ok-bg-2 from the nuclear baseline */
+[data-se="collapsible-region"],
+[data-se="scrollable-region"],
+#side-nav-expandable [data-se="collapsible-region"] > div,
+#side-nav-expandable [data-se="collapsible-region"] > div > div,
+#side-nav-expandable [data-se="collapsible-region"] > div > div > div {
+  background-color: var(--ok-bg) !important;
+}
+
+/* Sidenav header logo container — must match sidebar bg, not the default --ok-bg-2 */
+[data-se="sidenav-header-logo-container"],
+[data-se="sidenav-header-logo-container"] * {
+  background-color: var(--ok-bg) !important;
+}
 
 /* Nav links inside sidebar */
 .left-side-bar a,
@@ -230,7 +257,8 @@ nav.o-side-nav,
   background-color: transparent !important;
 }
 
-/* Main content gets the deepest background to contrast cards/tiles */
+/* Main content — use the same gray as the rest of the UI so no black shows
+   around tiles. html/body stay at --ok-bg for the outermost page chrome. */
 .main-content,
 #main-content,
 .okta-main-content,
@@ -243,7 +271,7 @@ nav.o-side-nav,
 [class*="Dashboard"]:not(button):not(a),
 #app-root,
 [id="main-content"] {
-  background-color: var(--ok-bg) !important;
+  background-color: var(--ok-bg-2) !important;
 }
 
 /* Category / section headings above app groups */
@@ -263,40 +291,68 @@ h2.o-collection-header,
    7. INPUTS & FORMS
    ───────────────────────────────────────────────────────────── */
 
-/* Checkboxes and radios — native inputs */
-input[type="checkbox"],
-input[type="radio"] {
-  appearance:         auto !important;
-  -webkit-appearance: auto !important;
-  background-color:   #ffffff !important;
-  border:             2px solid var(--ok-primary) !important;
+/* Checkboxes — fully custom-rendered so checked/unchecked are always
+   visually distinct regardless of color-scheme inheritance.
+   appearance:none lets us own all rendering; SVG background-image
+   draws the checkmark (input::after is unsupported on replaced elements). */
+input[type="checkbox"] {
+  appearance:         none !important;
+  -webkit-appearance: none !important;
   width:              16px !important;
   height:             16px !important;
+  min-width:          16px !important;
+  background-color:   var(--ok-bg-3) !important;
+  border:             2px solid var(--ok-accent) !important;
+  border-radius:      3px !important;
+  cursor:             pointer !important;
   flex-shrink:        0 !important;
-  accent-color:       var(--ok-primary) !important;
-  color-scheme:       light !important;
   opacity:            1 !important;
   visibility:         visible !important;
+  vertical-align:     middle !important;
+  background-repeat:  no-repeat !important;
+  background-position: center !important;
+  background-size:    10px 10px !important;
+  transition:         background-color 0.15s ease, border-color 0.15s ease !important;
 }
 
-/* Okta sign-in widget — hidden native input + styled label pseudo-element */
+input[type="checkbox"]:checked {
+  background-color: var(--ok-primary) !important;
+  border-color:     var(--ok-primary) !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M1.5 5l3 3 4-4.5' stroke='%23fff' stroke-width='1.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+}
+
+/* Radio buttons */
+input[type="radio"] {
+  appearance:         none !important;
+  -webkit-appearance: none !important;
+  width:              16px !important;
+  height:             16px !important;
+  min-width:          16px !important;
+  background-color:   var(--ok-bg-3) !important;
+  border:             2px solid var(--ok-accent) !important;
+  border-radius:      50% !important;
+  cursor:             pointer !important;
+  flex-shrink:        0 !important;
+  opacity:            1 !important;
+  visibility:         visible !important;
+  vertical-align:     middle !important;
+  background-repeat:  no-repeat !important;
+  background-position: center !important;
+  background-size:    8px 8px !important;
+  transition:         background-color 0.15s ease, border-color 0.15s ease !important;
+}
+
+input[type="radio"]:checked {
+  border-color:     var(--ok-primary) !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Ccircle cx='4' cy='4' r='3' fill='%23fff'/%3E%3C/svg%3E") !important;
+}
+
+/* Okta sign-in widget custom checkboxes use label::before for the visual box.
+   Since we now fully render the native input, hide the pseudo-element to avoid duplication. */
 .o-form-input-checkbox label::before,
 .custom-checkbox label::before,
 [data-se="o-form-input-checkbox"] label::before {
-  content:          '' !important;
-  display:          inline-block !important;
-  width:            16px !important;
-  height:           16px !important;
-  background-color: #ffffff !important;
-  border:           2px solid var(--ok-primary) !important;
-  border-radius:    3px !important;
-  vertical-align:   middle !important;
-  margin-right:     6px !important;
-}
-
-.o-form-input-checkbox input[type="checkbox"]:checked + label::before,
-[data-se="o-form-input-checkbox"] input[type="checkbox"]:checked + label::before {
-  background-color: var(--ok-primary) !important;
+  display: none !important;
 }
 
 /* OAuth / consent page form card */
@@ -311,7 +367,47 @@ input[type="radio"] {
 }
 
 
-input:not([type="submit"]):not([type="button"]):not([type="checkbox"]):not([type="radio"]),
+/* ── Search bar ────────────────────────────────────────────────
+   The Okta dashboard search is a MUI outlined input. Without
+   explicit overrides the nuclear baseline gives every wrapper div
+   its own border, creating 3–4 nested "search bars". Collapse
+   everything into a single styled container.
+   ──────────────────────────────────────────────────────────────── */
+span[role="search"],
+span[role="search"] > *,
+.dashboard--header-search-container,
+.dashboard--header-search-container > *,
+.MuiFormControl-root,
+.MuiInputBase-root,
+.MuiInputAdornment-root,
+[data-se="search-input"],
+[data-se="search-input"] > * {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Single styled border lives on the MuiInputBase wrapper */
+[data-se="search-input"] {
+  background-color: var(--ok-bg-3) !important;
+  border: 1px solid var(--ok-accent) !important;
+  border-radius: var(--ok-r-sm) !important;
+}
+
+/* The actual text input inside search — no extra border */
+[data-se="search-input"] input {
+  background-color: transparent !important;
+  border: none !important;
+  color: var(--ok-text-hi) !important;
+  box-shadow: none !important;
+}
+
+[data-se="search-input"]:focus-within {
+  border-color: rgba(214, 214, 214, 0.5) !important;
+  box-shadow: 0 0 0 2px rgba(214, 214, 214, 0.12) !important;
+}
+
+input:not([type="submit"]):not([type="button"]):not([type="checkbox"]):not([type="radio"]):not([data-se="search-input"] input),
 select,
 textarea,
 .o-form-control,
@@ -323,7 +419,7 @@ textarea,
   border-radius:    var(--ok-r-sm) !important;
 }
 
-input:focus,
+input:not([data-se="search-input"] input):focus,
 select:focus,
 textarea:focus {
   border-color: rgba(214, 214, 214, 0.5) !important;
@@ -360,19 +456,6 @@ input[type="button"]:hover,
   box-shadow: 0 0 8px 3px var(--ok-glow) !important;
 }
 
-/* Primary CTA — let Okta keep its brand color, only adjust shape/size */
-.button-primary,
-.btn-primary,
-[class*="btn-primary"],
-[class*="button-primary"],
-.o-form-button-bar .button {
-  background-color: revert !important;
-  color:            revert !important;
-  border:           revert !important;
-  border-radius:    20px !important;
-  padding:          7px 18px !important;
-  font-size:        0.875rem !important;
-}
 
 /* ─────────────────────────────────────────────────────────────
    9. DROPDOWNS & MENUS
