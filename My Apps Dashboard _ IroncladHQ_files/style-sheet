@@ -1,0 +1,27 @@
+.tb--sidenav-header {
+    background: #ffffff !important;
+}
+.tb--sidenav-main {
+    background: #ffffff !important;
+}
+.tb--sidenav-text {
+    color: hsla(0, 0%, 0%, 0.9) !important;
+}
+.tb--sidenav-item .tb--sidenav-item-icon svg {
+    color: hsla(0, 0%, 0%, 0.5) !important;
+}
+.tb--sidenav-item .tb--sidenav-item-label {
+    color: hsla(0, 0%, 0%, 0.9) !important;
+}
+.tb--sidenav-item.is-active, .tb--sidenav-item:hover {
+    background: hsla(0, 0%, 0%, 0.05) !important;
+}
+.tb--sidenav-item.is-active .tb--sidenav-item-icon svg {
+    color: hsla(0, 0%, 0%, 0.9) !important;
+}
+.tb--sidenav-subitem .tb--sidenav-subitem-icon svg, .tb--sidenav-subitem .tb--sidenav-subitem-label {
+    color: hsla(0, 0%, 0%, 0.9) !important;
+}
+.tb--sidenav-subitem:hover {
+    background: hsla(0, 0%, 0%, 0.05) !important;
+}

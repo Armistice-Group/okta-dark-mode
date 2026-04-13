@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Okta Dark Mode</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 280px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background-color: #0f0f11;
+      color: #b7b7b7;
+    }
+
+    .header {
+      padding: 16px 18px 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .header-icon {
+      width: 28px;
+      height: 28px;
+      background: linear-gradient(135deg, #3a3a40, #222324);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+
+    .header-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #e0e0e0;
+    }
+
+    .header-subtitle {
+      font-size: 11px;
+      color: #888;
+      margin-top: 1px;
+    }
+
+    .status-bar {
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(58, 58, 64, 0.2);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .status-label {
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background-color: #4caf50;
+      box-shadow: 0 0 6px #4caf50;
+      animation: pulse-dot 2s infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .toggle {
+      position: relative;
+      width: 36px;
+      height: 20px;
+    }
+
+    .toggle input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-slider {
+      position: absolute;
+      inset: 0;
+      background-color: #3a3a40;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .toggle-slider::before {
+      content: '';
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      left: 3px;
+      top: 3px;
+      background-color: #b7b7b7;
+      border-radius: 50%;
+      transition: transform 0.3s;
+    }
+
+    .toggle input:checked + .toggle-slider {
+      background-color: #5a5a80;
+    }
+
+    .toggle input:checked + .toggle-slider::before {
+      transform: translateX(16px);
+      background-color: #e0e0e0;
+    }
+
+    /* ── Colors section ── */
+    .colors-section {
+      padding: 14px 18px 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .section-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .scope-pill {
+      display: flex;
+      background: rgba(255,255,255,0.07);
+      border-radius: 20px;
+      padding: 2px;
+      gap: 2px;
+    }
+
+    .scope-btn {
+      font-size: 10px;
+      padding: 3px 8px;
+      border: none;
+      border-radius: 16px;
+      cursor: pointer;
+      background: transparent;
+      color: #888;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .scope-btn.active {
+      background: #3a3a50;
+      color: #e0e0e0;
+    }
+
+    .color-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 5px 0;
+      gap: 8px;
+    }
+
+    .color-label {
+      font-size: 11px;
+      color: #888;
+      flex: 1;
+    }
+
+    .color-input-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    input[type="color"] {
+      -webkit-appearance: none;
+      width: 22px;
+      height: 22px;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 5px;
+      cursor: pointer;
+      padding: 1px;
+      background: transparent;
+    }
+
+    input[type="color"]::-webkit-color-swatch-wrapper {
+      padding: 0;
+    }
+
+    input[type="color"]::-webkit-color-swatch {
+      border: none;
+      border-radius: 3px;
+    }
+
+    input[type="text"].hex-input {
+      width: 68px;
+      font-size: 11px;
+      font-family: 'SF Mono', 'Fira Mono', monospace;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 5px;
+      color: #c8c8c8;
+      padding: 3px 6px;
+      text-transform: uppercase;
+    }
+
+    input[type="text"].hex-input:focus {
+      outline: none;
+      border-color: rgba(255,255,255,0.3);
+    }
+
+    input[type="text"].hex-input.invalid {
+      border-color: rgba(255, 80, 80, 0.6);
+      color: #ff8888;
+    }
+
+    .colors-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 10px;
+    }
+
+    .reset-btn {
+      font-size: 10px;
+      padding: 4px 10px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      color: #888;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .reset-btn:hover {
+      background: rgba(255,255,255,0.12);
+      color: #c8c8c8;
+    }
+
+    .domain-label {
+      font-size: 10px;
+      color: #555;
+      margin-top: 2px;
+      text-align: right;
+      min-height: 14px;
+    }
+
+    .io-section {
+      padding: 10px 18px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      display: flex;
+      gap: 8px;
+    }
+
+    .io-btn {
+      flex: 1;
+      font-size: 11px;
+      padding: 6px 0;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      color: #999;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      text-align: center;
+    }
+
+    .io-btn:hover {
+      background: rgba(255,255,255,0.12);
+      color: #e0e0e0;
+    }
+
+    .io-btn.import-error {
+      border-color: rgba(255, 80, 80, 0.5);
+      color: #ff8888;
+    }
+
+    .io-btn.import-ok {
+      border-color: rgba(80, 200, 80, 0.5);
+      color: #80e080;
+    }
+
+    .footer {
+      padding: 8px 18px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 10px;
+      color: #555;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-icon">🌙</div>
+    <div>
+      <div class="header-title">Okta Dark Mode</div>
+      <div class="header-subtitle">Dashboard theme active</div>
+    </div>
+  </div>
+
+  <div class="status-bar">
+    <span class="status-label">
+      <span class="status-dot"></span>
+      <span id="status-text">Dark mode active</span>
+    </span>
+    <label class="toggle" title="Toggle dark mode">
+      <input type="checkbox" id="toggle-enabled" checked>
+      <span class="toggle-slider"></span>
+    </label>
+  </div>
+
+  <div class="colors-section">
+    <div class="section-header">
+      <span class="section-title">Colors</span>
+      <div class="scope-pill">
+        <button class="scope-btn active" id="scope-global">Global</button>
+        <button class="scope-btn" id="scope-domain">This domain</button>
+      </div>
+    </div>
+    <div class="domain-label" id="domain-label"></div>
+
+    <div class="color-row">
+      <span class="color-label">Page background</span>
+      <div class="color-input-group">
+        <input type="color" id="color-bg">
+        <input type="text" class="hex-input" id="hex-bg" maxlength="7" placeholder="#111113">
+      </div>
+    </div>
+    <div class="color-row">
+      <span class="color-label">Cards &amp; nav</span>
+      <div class="color-input-group">
+        <input type="color" id="color-bg2">
+        <input type="text" class="hex-input" id="hex-bg2" maxlength="7" placeholder="#1c1c21">
+      </div>
+    </div>
+    <div class="color-row">
+      <span class="color-label">Input fields</span>
+      <div class="color-input-group">
+        <input type="color" id="color-bg3">
+        <input type="text" class="hex-input" id="hex-bg3" maxlength="7" placeholder="#26262d">
+      </div>
+    </div>
+    <div class="color-row">
+      <span class="color-label">Hover glow</span>
+      <div class="color-input-group">
+        <input type="color" id="color-accent">
+        <input type="text" class="hex-input" id="hex-accent" maxlength="7" placeholder="#d6d6d6">
+      </div>
+    </div>
+    <div class="color-row">
+      <span class="color-label">Primary</span>
+      <div class="color-input-group">
+        <input type="color" id="color-primary">
+        <input type="text" class="hex-input" id="hex-primary" maxlength="7" placeholder="#4c9aff">
+      </div>
+    </div>
+    <div class="color-row">
+      <span class="color-label">Buttons</span>
+      <div class="color-input-group">
+        <input type="color" id="color-btnbg">
+        <input type="text" class="hex-input" id="hex-btnbg" maxlength="7" placeholder="#2a2a35">
+      </div>
+    </div>
+    <div class="color-row">
+      <span class="color-label">Link buttons</span>
+      <div class="color-input-group">
+        <input type="color" id="color-link">
+        <input type="text" class="hex-input" id="hex-link" maxlength="7" placeholder="#4c9aff">
+      </div>
+    </div>
+
+    <div class="colors-actions">
+      <button class="reset-btn" id="reset-btn">Reset to defaults</button>
+    </div>
+  </div>
+
+  <div class="io-section">
+    <button class="io-btn" id="export-btn">Export settings</button>
+    <button class="io-btn" id="import-btn">Import settings</button>
+    <input type="file" id="import-file" accept=".json" style="display:none">
+  </div>
+
+  <div class="footer">Reload page after changing colors</div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

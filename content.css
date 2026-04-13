@@ -1,0 +1,581 @@
+/* ============================================================
+   Okta Dark Mode — content.css
+   Strategy: universal-selector baseline (same as gabrielsroka/OktaDarkMode)
+   then layer specific overrides on top.
+   ============================================================ */
+
+:root {
+  --ok-bg:       #111113;
+  --ok-bg-2:     #1c1c21;
+  --ok-bg-3:     #26262d;
+  --ok-text:     #c8c8c8;
+  --ok-text-dim: rgba(200, 200, 200, 0.55);
+  --ok-text-hi:  #e8e8e8;
+  --ok-accent:   #3a3a40;
+  --ok-border:   rgba(255, 255, 255, 0.09);
+  --ok-glow:     #d6d6d6;
+  --ok-btn-bg:   #2a2a35;
+  --ok-btn-text: #e8e8e8;
+  --ok-primary:  #4c9aff;
+  --ok-link:     #4c9aff;
+  --ok-shadow:   rgba(0, 0, 0, 0.55);
+  --ok-r-sm:     10px;
+  --ok-r-md:     18px;
+  --ok-r-lg:     24px;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   1. NUCLEAR BASELINE
+   Forces every element dark, including inline-styled tiles,
+   sidebar, and anything Okta renders with explicit bg colors.
+   --ok-bg-2 is the default so forms/cards get an elevated tone.
+   html/body get the deepest --ok-bg as the true page background.
+   ───────────────────────────────────────────────────────────── */
+*:not([class*="success"]):not([class*="Success"]):not([class*="danger"]):not([class*="Danger"]):not([class*="warning"]):not([class*="Warning"]):not([class*="error"]):not([class*="Error"]):not([class*="info"]):not([class*="Info"]):not(input[type="checkbox"]):not(input[type="radio"]):not(button):not(input[type="button"]):not(input[type="submit"]):not(html):not(body) {
+  background-color: var(--ok-bg-2) !important;
+  color:            var(--ok-text) !important;
+  border-color:     var(--ok-border) !important;
+}
+
+html,
+body {
+  background-color: var(--ok-bg) !important;
+}
+
+button,
+input[type="button"] {
+  background-color: var(--ok-btn-bg)   !important;
+  color:            var(--ok-btn-text) !important;
+}
+
+html {
+  color-scheme: dark;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   2. PROTECT MEDIA / TRANSPARENT ELEMENTS
+   Prevent black boxes over images, SVGs, icons, avatars.
+   ───────────────────────────────────────────────────────────── */
+img,
+video,
+canvas,
+svg,
+svg *,
+iframe,
+picture,
+[class*="logo"] img,
+[class*="icon"] img,
+[class*="avatar"] img,
+.app-icon,
+.app-icon img,
+.app-logo,
+.app-logo img,
+[class*="AppIcon"] img,
+.o-app-icon img,
+.custom-logo,
+.custom-logo img {
+  background-color: transparent !important;
+}
+
+/* App icon containers — transparent so the icon art shows */
+.app-icon,
+.o-app-icon,
+[class*="AppIcon"],
+.app-logo,
+.chiclet--main,
+.chiclet--article,
+.chiclet--action {
+  background-color: transparent !important;
+  border-radius: 12px;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   3. SCROLLBARS
+   ───────────────────────────────────────────────────────────── */
+* {
+  scrollbar-color: var(--ok-accent) var(--ok-bg-2);
+  scrollbar-width: thin;
+}
+
+*::-webkit-scrollbar         { width: 6px; height: 6px; }
+*::-webkit-scrollbar-track   { background: var(--ok-bg-2) !important; }
+*::-webkit-scrollbar-thumb   { background-color: var(--ok-accent) !important; border-radius: 3px; }
+
+/* ─────────────────────────────────────────────────────────────
+   4. PAGE CHROME — header & sidebar
+   Okta End-User Dashboard real class names from the DOM:
+     header:   .primary-auth-container, #top-bar, .okta-top-bar,
+               okta-header, [data-se="header"], .o-header,
+               .enduser-header (older), header[role="banner"]
+     sidebar:  .left-side-bar, #left-side-bar, .sidenav,
+               [class*="left-nav"], [class*="sidebar"]
+   ───────────────────────────────────────────────────────────── */
+
+/* Header */
+.floating-header,
+[data-se="header"],
+#top-bar,
+.o-header,
+.okta-top-bar,
+.enduser-header,
+okta-dash-header,
+header[role="banner"],
+[class*="TopNav"],
+[class*="top-bar"],
+[class*="topbar"],
+[class*="TopBar"] {
+  background-color: var(--ok-bg-2) !important;
+  border-bottom: 1px solid var(--ok-border) !important;
+}
+
+
+/* Left sidebar / nav */
+nav,
+#side-nav-expandable,
+.left-side-bar,
+#left-side-bar,
+.sidenav,
+#sidenav,
+[class*="left-nav"],
+[class*="LeftNav"],
+[class*="left-side-bar"],
+[class*="LeftSideBar"],
+[class*="sidebar"]:not([class*="pf-c"]),
+nav.o-side-nav,
+.o-side-nav {
+  background-color: var(--ok-bg) !important;
+  border-right: 1px solid var(--ok-border) !important;
+}
+
+
+/* Nav links inside sidebar */
+.left-side-bar a,
+.sidenav a,
+.o-side-nav a,
+[class*="left-nav"] a,
+[class*="sidebar"] a {
+  color: var(--ok-text) !important;
+}
+
+.left-side-bar a:hover,
+.sidenav a:hover,
+.o-side-nav a:hover,
+[class*="left-nav"] a:hover {
+  background-color: rgba(58, 58, 64, 0.45) !important;
+  color: var(--ok-text-hi) !important;
+}
+
+/* Active nav item */
+.left-side-bar a.active,
+.left-side-bar a[aria-current],
+.sidenav a.active {
+  background-color: rgba(58, 58, 64, 0.7) !important;
+  color: var(--ok-text-hi) !important;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   6. APP TILES (glassmorphism)
+   Okta End-User Dashboard real class names (confirmed from DOM):
+     .chiclet            — tile root / anchor
+     .chiclet--container — tile card wrapper
+     .enduser-app        — legacy wrapper
+     .app-button         — older Okta dashboard tile wrapper
+     .o-app-button       — variant
+     .bookmark-wrap      — bookmark app wrapper
+     .o-collection-item  — item inside an app category list
+   ───────────────────────────────────────────────────────────── */
+.chiclet--container,
+.chiclet,
+.enduser-app,
+.app-button,
+.o-app-button,
+.bookmark-wrap,
+.o-collection-item,
+[class*="app-button"],
+[class*="appButton"],
+[class*="AppButton"] {
+  background: linear-gradient(
+    135deg,
+    rgba(36, 36, 44, 0.9) 0%,
+    rgba(20, 20, 26, 0.9) 100%
+  ) !important;
+  border:        1px solid rgba(255, 255, 255, 0.11) !important;
+  border-radius: var(--ok-r-md) !important;
+  box-shadow:    0 4px 16px var(--ok-shadow) !important;
+  transition:    box-shadow 0.25s ease, transform 0.2s ease !important;
+  overflow:      hidden;
+}
+
+.chiclet--container:hover,
+.chiclet:hover,
+.enduser-app:hover,
+.app-button:hover,
+.o-app-button:hover,
+.bookmark-wrap:hover,
+.o-collection-item:hover,
+[class*="app-button"]:hover {
+  box-shadow: 0 0 18px 4px var(--ok-glow) !important;
+  transform:  translateY(-2px) !important;
+}
+
+/* All children inside tiles — transparent so the gradient shows through */
+.chiclet--container *,
+.chiclet *,
+.enduser-app *,
+.app-button *,
+.o-app-button *,
+.bookmark-wrap *,
+.o-collection-item * {
+  background-color: transparent !important;
+}
+
+/* Main content gets the deepest background to contrast cards/tiles */
+.main-content,
+#main-content,
+.okta-main-content,
+#okta-main-content,
+[class*="main-content"],
+[class*="MainContent"],
+.content-area,
+#content,
+.dashboard,
+[class*="Dashboard"]:not(button):not(a),
+#app-root,
+[id="main-content"] {
+  background-color: var(--ok-bg) !important;
+}
+
+/* Category / section headings above app groups */
+.o-collection-header,
+.o-collection-header h2,
+h2.o-collection-header,
+[class*="category-title"],
+[class*="CategoryTitle"],
+[class*="section-header"],
+[class*="SectionHeader"] {
+  background-color: transparent !important;
+  color:            var(--ok-text-hi) !important;
+  border-bottom:    1px solid var(--ok-border) !important;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   7. INPUTS & FORMS
+   ───────────────────────────────────────────────────────────── */
+
+/* Checkboxes and radios — native inputs */
+input[type="checkbox"],
+input[type="radio"] {
+  appearance:         auto !important;
+  -webkit-appearance: auto !important;
+  background-color:   #ffffff !important;
+  border:             2px solid var(--ok-primary) !important;
+  width:              16px !important;
+  height:             16px !important;
+  flex-shrink:        0 !important;
+  accent-color:       var(--ok-primary) !important;
+  color-scheme:       light !important;
+  opacity:            1 !important;
+  visibility:         visible !important;
+}
+
+/* Okta sign-in widget — hidden native input + styled label pseudo-element */
+.o-form-input-checkbox label::before,
+.custom-checkbox label::before,
+[data-se="o-form-input-checkbox"] label::before {
+  content:          '' !important;
+  display:          inline-block !important;
+  width:            16px !important;
+  height:           16px !important;
+  background-color: #ffffff !important;
+  border:           2px solid var(--ok-primary) !important;
+  border-radius:    3px !important;
+  vertical-align:   middle !important;
+  margin-right:     6px !important;
+}
+
+.o-form-input-checkbox input[type="checkbox"]:checked + label::before,
+[data-se="o-form-input-checkbox"] input[type="checkbox"]:checked + label::before {
+  background-color: var(--ok-primary) !important;
+}
+
+/* OAuth / consent page form card */
+[data-se="consent-form"],
+[data-se="o-form"],
+.consent-form,
+.o-form,
+.o-main-content,
+[class*="consent"] {
+  background-color: var(--ok-bg-2) !important;
+  border-radius:    var(--ok-r-lg) !important;
+}
+
+
+input:not([type="submit"]):not([type="button"]):not([type="checkbox"]):not([type="radio"]),
+select,
+textarea,
+.o-form-control,
+[class*="TextInput"],
+[class*="FormControl"] {
+  background-color: var(--ok-bg-3) !important;
+  color:            var(--ok-text-hi) !important;
+  border:           2px solid var(--ok-accent) !important;
+  border-radius:    var(--ok-r-sm) !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: rgba(214, 214, 214, 0.5) !important;
+  box-shadow:   0 0 0 2px rgba(214, 214, 214, 0.12) !important;
+  outline:      none !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--ok-text-dim) !important;
+}
+
+label,
+.o-form-label {
+  color:      var(--ok-text-dim) !important;
+  background: transparent !important;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   8. BUTTONS
+   ───────────────────────────────────────────────────────────── */
+button,
+input[type="button"],
+[class*="btn"],
+[class*="Btn"] {
+  background-color: var(--ok-btn-bg)   !important;
+  color:            var(--ok-btn-text) !important;
+  transition:       box-shadow 0.2s ease !important;
+}
+
+button:hover,
+input[type="button"]:hover,
+[class*="btn"]:hover {
+  box-shadow: 0 0 8px 3px var(--ok-glow) !important;
+}
+
+/* Primary CTA — let Okta keep its brand color, only adjust shape/size */
+.button-primary,
+.btn-primary,
+[class*="btn-primary"],
+[class*="button-primary"],
+.o-form-button-bar .button {
+  background-color: revert !important;
+  color:            revert !important;
+  border:           revert !important;
+  border-radius:    20px !important;
+  padding:          7px 18px !important;
+  font-size:        0.875rem !important;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   9. DROPDOWNS & MENUS
+   ───────────────────────────────────────────────────────────── */
+.dropdown-menu,
+[class*="dropdown-menu"],
+[class*="DropdownMenu"],
+[role="menu"],
+[role="listbox"],
+.popover,
+.tooltip-inner {
+  background-color: var(--ok-bg-2) !important;
+  border:           1px solid var(--ok-border) !important;
+  border-radius:    var(--ok-r-sm) !important;
+  box-shadow:       0 8px 28px rgba(0, 0, 0, 0.65) !important;
+}
+
+.dropdown-menu li > a,
+[class*="dropdown-item"],
+[role="menuitem"],
+[role="option"] {
+  background-color: transparent !important;
+  color:            var(--ok-text) !important;
+}
+
+.dropdown-menu li > a:hover,
+[class*="dropdown-item"]:hover,
+[role="menuitem"]:hover {
+  background-color: rgba(58, 58, 64, 0.5) !important;
+  color:            var(--ok-text-hi) !important;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   10. MODALS & DIALOGS
+   ───────────────────────────────────────────────────────────── */
+[role="dialog"],
+.modal-content,
+[class*="Modal"],
+[class*="modal-content"] {
+  background-color: var(--ok-bg-2) !important;
+  border:           1px solid var(--ok-border) !important;
+  border-radius:    var(--ok-r-lg) !important;
+  box-shadow:       0 12px 40px rgba(0, 0, 0, 0.7) !important;
+}
+
+.modal-header,
+.modal-footer {
+  background-color: transparent !important;
+  border-color:     var(--ok-border) !important;
+}
+
+.modal-backdrop,
+.modal-overlay {
+  background-color: rgba(0, 0, 0, 0.75) !important;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   11. TABLES
+   ───────────────────────────────────────────────────────────── */
+th,
+thead tr,
+thead th {
+  background-color: var(--ok-bg-2) !important;
+  color:            var(--ok-text-hi) !important;
+}
+
+td,
+tbody tr,
+tbody td {
+  background-color: var(--ok-bg) !important;
+}
+
+tbody tr:hover td {
+  background-color: rgba(58, 58, 64, 0.35) !important;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   12. OKTA SIGN-IN WIDGET / OAUTH AUTHORIZE
+   ───────────────────────────────────────────────────────────── */
+#okta-sign-in,
+.auth-container,
+.primary-auth-container {
+  background-color: var(--ok-bg-2) !important;
+  border:           1px solid var(--ok-border) !important;
+  border-radius:    var(--ok-r-lg) !important;
+}
+
+.auth-content,
+.auth-content-inner {
+  background-color: var(--ok-bg-2) !important;
+  border:           none !important;
+  border-radius:    var(--ok-r-lg) !important;
+}
+
+.auth-content,
+.auth-content-inner {
+  padding: 24px !important;
+}
+
+.okta-sign-in-header,
+.auth-org-logo {
+  background-color: transparent !important;
+  border-bottom:    1px solid var(--ok-border) !important;
+}
+
+.o-form,
+.o-form-content {
+  background-color: transparent !important;
+}
+
+/* Kill the large black footer block on the authorize page */
+.auth-footer,
+.auth-footer *,
+[class*="auth-footer"],
+.o-footer,
+.o-footer * {
+  background-color: transparent !important;
+}
+
+/* FastPass / device authenticator section */
+[class*="fastpass"],
+[class*="FastPass"],
+[class*="fast-pass"],
+[class*="device-challenge"],
+[class*="DeviceChallenge"],
+[class*="authenticator"],
+[data-se*="fastpass"],
+[data-se*="device"] {
+  background-color: var(--ok-bg-2) !important;
+  border:           1px solid var(--ok-border) !important;
+  border-radius:    var(--ok-r-md) !important;
+}
+
+[class*="fastpass"] *,
+[class*="FastPass"] *,
+[class*="fast-pass"] *,
+[class*="device-challenge"] *,
+[class*="authenticator"] * {
+  background-color: transparent !important;
+}
+
+/* FastPass link-button — transparent, styled as a link */
+.link-button,
+.button.link-button {
+  background-color: transparent !important;
+  color:            var(--ok-link) !important;
+  border:           none !important;
+  padding:          0 !important;
+  font-size:        inherit !important;
+  text-decoration:  underline !important;
+}
+
+.o-form-error-container,
+.infobox-error,
+.okta-error-message {
+  background-color: rgba(120, 0, 0, 0.2) !important;
+  border:           1px solid rgba(200, 0, 0, 0.35) !important;
+  border-radius:    var(--ok-r-sm) !important;
+  color:            #ff8888 !important;
+}
+
+.infobox-success {
+  background-color: rgba(0, 80, 50, 0.2) !important;
+  border:           1px solid rgba(0, 150, 80, 0.35) !important;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   13. MISC FIXES
+   ───────────────────────────────────────────────────────────── */
+
+/* Don't put a border-color on every SVG path */
+path, circle, rect, line, polyline, polygon, ellipse {
+  border-color: transparent !important;
+}
+
+/* Tooltips */
+[class*="tooltip"],
+[role="tooltip"] {
+  background-color: var(--ok-bg-3) !important;
+  border:           1px solid var(--ok-border) !important;
+  border-radius:    6px !important;
+  color:            var(--ok-text) !important;
+}
+
+/* Badges */
+.badge,
+[class*="Badge"],
+[class*="tag"],
+[class*="Tag"],
+[class*="chip"],
+[class*="Chip"] {
+  background-color: var(--ok-bg-3) !important;
+  border-radius:    20px !important;
+}
+
+/* Selection */
+::selection {
+  background-color: rgba(58, 58, 64, 0.8) !important;
+  color:            var(--ok-text-hi) !important;
+}
+
+/* Focus rings */
+:focus-visible {
+  outline: 2px solid rgba(214, 214, 214, 0.45) !important;
+  outline-offset: 2px !important;
+}

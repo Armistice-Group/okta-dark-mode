@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(ls /c/dev/okta-dark/*.html /c/dev/okta-dark/*_files/ 2>/dev/null | head -20)",
+      "Bash(curl -s \"https://ironcladhq.okta.com/oauth2/v1/authorize\" 2>&1 | head -500)"
+    ]
+  }
+}
