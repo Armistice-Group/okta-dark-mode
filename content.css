@@ -31,7 +31,7 @@
    --ok-bg-2 is the default so forms/cards get an elevated tone.
    html/body get the deepest --ok-bg as the true page background.
    ───────────────────────────────────────────────────────────── */
-*:not([class*="success"]):not([class*="Success"]):not([class*="danger"]):not([class*="Danger"]):not([class*="warning"]):not([class*="Warning"]):not([class*="error"]):not([class*="Error"]):not([class*="info"]):not([class*="Info"]):not(input[type="checkbox"]):not(input[type="radio"]):not(button):not(input[type="button"]):not(input[type="submit"]):not(html):not(body) {
+*:not([class*="success"]):not([class*="Success"]):not([class*="danger"]):not([class*="Danger"]):not([class*="warning"]):not([class*="Warning"]):not([class*="error"]):not([class*="Error"]):not([class*="info"]):not([class*="Info"]):not(input[type="checkbox"]):not(input[type="radio"]):not(button):not(input[type="button"]):not(input[type="submit"]):not(html):not(body):not(.link-button):not(.select-factor) {
   background-color: var(--ok-bg-2) !important;
   color:            var(--ok-text) !important;
   border-color:     var(--ok-border) !important;
@@ -42,7 +42,7 @@ body {
   background-color: var(--ok-bg) !important;
 }
 
-button,
+button:not(.link-button):not(.chiclet--action),
 input[type="button"] {
   background-color: var(--ok-btn-bg)   !important;
   color:            var(--ok-btn-text) !important;
@@ -88,10 +88,30 @@ picture,
 [class*="AppIcon"],
 .app-logo,
 .chiclet--main,
-.chiclet--article,
-.chiclet--action {
+.chiclet--article {
   background-color: transparent !important;
   border-radius: 12px;
+}
+
+.chiclet--action,
+.chiclet--action * {
+  background-color: transparent !important;
+  background: none !important;
+  border: none !important;
+}
+
+/* Authenticator icons — leave completely alone so round icons stay round */
+[class*="authenticator-icon"],
+[class*="factor-icon"],
+[class*="factor-beacon"],
+[class*="auth-beacon"],
+.authenticator-icon,
+.factor-icon,
+.factor-beacon,
+.auth-beacon {
+  background-color: transparent !important;
+  border: none !important;
+  border-radius: unset !important;
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -139,6 +159,7 @@ header[role="banner"],
   background-color: var(--ok-bg-2) !important;
   border-bottom: 1px solid var(--ok-border) !important;
 }
+
 
 
 /* Left sidebar / nav — only target the actual sidebar, not every nav on the page */
@@ -379,6 +400,12 @@ span[role="search"] > *,
 .dashboard--header-search-container > *,
 .MuiFormControl-root,
 .MuiInputBase-root,
+.MuiFormControl-root,
+.MuiFormControl-marginNormal,
+.MuiInputBase-input,
+.Mui-readOnly, 
+.MuiBox-root,
+.MuiInputBase-readOnly,
 .MuiInputAdornment-root,
 [data-se="search-input"],
 [data-se="search-input"] > * {
@@ -387,11 +414,44 @@ span[role="search"] > *,
   box-shadow: none !important;
 }
 
+/* Strip borders from all Mui* form elements globally */
+[class*="MuiInput"],
+[class*="MuiInput"] *,
+[class*="MuiFormControl"],
+[class*="MuiFormControl"] *,
+[class*="MuiFormControlLabel"],
+[class*="MuiFormControlLabel"] *:not([class*="MuiButtonBase"]),
+[class*="MuiOutlinedInput"],
+[class*="MuiOutlinedInput"] *,
+div[class*="MuiBox"],
+div[class*="MuiBox"] > * {
+  border: none !important;
+  outline: none !important;
+}
+
+[class*="MuiButtonBase"],
+[class*="MuiButtonBase"] label,
+[class*="MuiButton-startIcon"] {
+  background-color: transparent !important;
+}
+
+div.drawer--header-container {
+  background-color: var(--ok-bg-2) !important;
+}
+
 /* Single styled border lives on the MuiInputBase wrapper */
 [data-se="search-input"] {
   background-color: var(--ok-bg-3) !important;
   border: 1px solid var(--ok-accent) !important;
   border-radius: var(--ok-r-sm) !important;
+}
+
+/* Search dropdown/autocomplete list — restore full width */
+[data-se="search-input"] + * ,
+.MuiAutocomplete-popper,
+.MuiAutocomplete-paper,
+.MuiPaper-root[class*="MuiAutocomplete"] {
+  width: 100% !important;
 }
 
 /* The actual text input inside search — no extra border */
@@ -441,18 +501,18 @@ label,
 /* ─────────────────────────────────────────────────────────────
    8. BUTTONS
    ───────────────────────────────────────────────────────────── */
-button,
+button:not(.link-button):not(.chiclet--action),
 input[type="button"],
-[class*="btn"],
-[class*="Btn"] {
+[class*="btn"]:not(.link-button):not(.chiclet--action),
+[class*="Btn"]:not(.link-button):not(.chiclet--action) {
   background-color: var(--ok-btn-bg)   !important;
   color:            var(--ok-btn-text) !important;
   transition:       box-shadow 0.2s ease !important;
 }
 
-button:hover,
+button:not(.link-button):not(.chiclet--action):hover,
 input[type="button"]:hover,
-[class*="btn"]:hover {
+[class*="btn"]:not(.link-button):not(.chiclet--action):hover {
   box-shadow: 0 0 8px 3px var(--ok-glow) !important;
 }
 
@@ -468,7 +528,7 @@ input[type="button"]:hover,
 .popover,
 .tooltip-inner {
   background-color: var(--ok-bg-2) !important;
-  border:           1px solid var(--ok-border) !important;
+  border:           none !important;
   border-radius:    var(--ok-r-sm) !important;
   box-shadow:       0 8px 28px rgba(0, 0, 0, 0.65) !important;
 }
@@ -550,10 +610,6 @@ tbody tr:hover td {
   border-radius:    var(--ok-r-lg) !important;
 }
 
-.auth-content,
-.auth-content-inner {
-  padding: 24px !important;
-}
 
 .okta-sign-in-header,
 .auth-org-logo {
@@ -598,19 +654,39 @@ tbody tr:hover td {
 }
 
 /* FastPass link-button — transparent, styled as a link */
-.link-button,
-.button.link-button {
+.link-button:not(.select-factor),
+.button.link-button:not(.select-factor) {
   background-color: transparent !important;
-  color:            var(--ok-link) !important;
   border:           none !important;
   padding:          0 !important;
   font-size:        inherit !important;
   text-decoration:  underline !important;
 }
 
-.o-form-error-container,
-.infobox-error,
-.okta-error-message {
+.authenticator-row.clearfix {
+  color: var(--ok-text) !important;
+  border: none !important;
+}
+
+div.list-content,
+.siw-main-body,
+.auth-content-inner,
+.select-authenticator-authenticate,
+.authenticator-verify-list {
+  border: none !important;
+}
+
+.authenticator-description,
+.authenticator-description *,
+.authenticator-label,
+.authenticator-label * {
+  color: var(--ok-text) !important;
+  border: none !important;
+}
+
+.o-form-error-container:not(:empty),
+.infobox-error:not(:empty),
+.okta-error-message:not(:empty) {
   background-color: rgba(120, 0, 0, 0.2) !important;
   border:           1px solid rgba(200, 0, 0, 0.35) !important;
   border-radius:    var(--ok-r-sm) !important;
@@ -661,4 +737,23 @@ path, circle, rect, line, polyline, polygon, ellipse {
 :focus-visible {
   outline: 2px solid rgba(214, 214, 214, 0.45) !important;
   outline-offset: 2px !important;
+}
+
+[data-se="app-card-settings-button"] {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+[data-se="app-card-settings-button"]:hover {
+  background-color: transparent !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+[data-se="app-card-settings-button"] svg {
+  background-color: transparent !important;
+  position: relative !important;
+  right: 8px !important;
 }
